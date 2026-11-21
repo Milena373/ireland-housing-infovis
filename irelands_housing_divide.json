@@ -581,7 +581,8 @@
               "expr": "'Price-to-income ratio, ' + selected_year"
             },
             "anchor": "start",
-            "offset": 10
+            "offset": 10,
+            "dy": 10
           },
           "width": 310,
           "height": 620,
@@ -620,7 +621,7 @@
                 "labelLimit": 155,
                 "ticks": false,
                 "domain": false,
-                "labelPadding": 1
+                "labelPadding": 6
               }
             },
             "x": {
