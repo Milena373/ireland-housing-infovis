@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -7,70 +8,215 @@
 <style>
 *{box-sizing:border-box}
 html,body{width:100%;height:100%;margin:0}
-body{background:#f3f6f8;color:#172432;font:14px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow:hidden}
-main{height:calc(100dvh - 12px);width:calc(100vw - 16px);margin:6px auto;padding:10px 12px 8px;background:white;border:1px solid #e1e7ee;border-radius:10px;box-shadow:0 2px 12px #1d31420d;overflow:hidden}
-h1{font-size:27px;letter-spacing:-.45px;line-height:1.15;margin:0}
-.toprow{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin:0 0 9px}
-.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:5px 10px;background:#f6f8fa;border:1px solid #e3e9ef;border-radius:7px;width:fit-content}
-.toolbar .vega-bindings{display:flex;align-items:center;flex-wrap:wrap;gap:14px}
-.toolbar .vega-bind{display:flex;align-items:center;gap:6px;margin:0;white-space:nowrap}
-.toolbar .vega-bind-name{min-width:0!important;margin-right:0!important;font-weight:700;color:#172432}
-.toolbar select{max-width:270px;padding:5px 8px;border:1px solid #ccd7df;border-radius:5px;background:white;color:#172432;font:inherit}
-/* Zoom (rather than transform:scale) preserves pointer hit-testing and makes
-   Vega's SVG tooltip positioning behave naturally during linked hovering. */
-#vis{width:100%;overflow:visible;zoom:1}
-#vis .vega-embed{width:max-content;min-width:0;display:block}
-footer{font-size:11px;color:#687989;margin-top:6px;line-height:1.2}
-@media(max-width:900px){main{margin:0;width:100vw;height:100dvh;border-radius:0;padding:8px}.toprow{gap:7px}h1{font-size:22px}}
+body{
+  background:#f3f6f8;
+  color:#172432;
+  font:14px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  overflow:hidden;
+}
+main{
+  height:calc(100dvh - 12px);
+  width:calc(100vw - 16px);
+  margin:6px auto;
+  padding:10px 12px 8px;
+  background:white;
+  border:1px solid #e1e7ee;
+  border-radius:10px;
+  box-shadow:0 2px 12px #1d31420d;
+  overflow:hidden;
+}
+h1{
+  font-size:27px;
+  letter-spacing:-.45px;
+  line-height:1.15;
+  margin:0;
+}
+.toprow{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:14px;
+  margin:0 0 9px;
+}
+.toolbar{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:10px;
+  padding:5px 10px;
+  background:#f6f8fa;
+  border:1px solid #e3e9ef;
+  border-radius:7px;
+  width:fit-content;
+}
+.toolbar .vega-bindings{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:14px;
+}
+.toolbar .vega-bind{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin:0;
+  white-space:nowrap;
+}
+.toolbar .vega-bind-name{
+  min-width:0!important;
+  margin-right:0!important;
+  font-weight:700;
+  color:#172432;
+}
+.toolbar select{
+  max-width:270px;
+  padding:5px 8px;
+  border:1px solid #ccd7df;
+  border-radius:5px;
+  background:white;
+  color:#172432;
+  font:inherit;
+}
+
+/* Keep pointer interactions and tooltips responsive. */
+#vis{
+  width:100%;
+  overflow:visible;
+  zoom:1;
+}
+#vis .vega-embed{
+  width:max-content;
+  min-width:0;
+  display:block;
+}
+footer{
+  font-size:11px;
+  color:#687989;
+  margin-top:6px;
+  line-height:1.2;
+}
+@media(max-width:900px){
+  main{
+    margin:0;
+    width:100vw;
+    height:100dvh;
+    border-radius:0;
+    padding:8px;
+  }
+  .toprow{gap:7px}
+  h1{font-size:22px}
+}
 </style>
 </head>
 <body>
 <main>
 <header class="toprow">
   <h1>Ireland's Housing Divide</h1>
-  <div id="controls" class="toolbar" aria-label="Dashboard controls"></div>
+  <div id="controls" class="toolbar"
+       aria-label="Dashboard controls"></div>
 </header>
-<div id="vis" aria-label="Interactive housing affordability dashboard"></div>
-<footer id="source">Source: CSO dwelling purchases and purchaser-income statistics, processed for this visualisation. These ratios describe purchasers rather than all households.</footer>
+
+<div id="vis"
+     aria-label="Interactive housing affordability dashboard"></div>
+
+<footer id="source">
+  Source: CSO dwelling purchases and purchaser-income
+  statistics, processed for this visualisation.
+  These ratios describe purchasers rather than all households.
+</footer>
 </main>
+
 <script src="https://cdn.jsdelivr.net/npm/vega@5/build/vega.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vega-lite@5/build/vega-lite.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build/vega-embed.min.js"></script>
+
 <script>
-/* Fitting changes only the HTML display size, not Vega-Lite interactions or
-   the data-bound geoshapes. No re-embedding occurs during hover or resize. */
 const dashboard = document.getElementById('vis');
 const page = document.querySelector('main');
 const sourceNote = document.getElementById('source');
-let originalWidth = 0, originalHeight = 0;
-function fitDashboard(){
-  if(!originalWidth || !originalHeight) return;
+
+let originalWidth = 0;
+let originalHeight = 0;
+
+function fitDashboard() {
+  if (!originalWidth || !originalHeight) return;
+
   dashboard.style.zoom = '1';
+
   const mainBox = page.getBoundingClientRect();
   const visTop = dashboard.getBoundingClientRect().top;
-  const innerWidth = mainBox.width - parseFloat(getComputedStyle(page).paddingLeft) - parseFloat(getComputedStyle(page).paddingRight) - 3;
-  const spaceUnder = sourceNote.getBoundingClientRect().height + 13;
-  const availableHeight = Math.max(1, window.innerHeight - visTop - spaceUnder - 8);
-  const scale = Math.min(1, innerWidth / originalWidth, availableHeight / originalHeight);
+
+  const innerWidth =
+    mainBox.width -
+    parseFloat(getComputedStyle(page).paddingLeft) -
+    parseFloat(getComputedStyle(page).paddingRight) - 3;
+
+  const spaceUnder =
+    sourceNote.getBoundingClientRect().height + 13;
+
+  const availableHeight = Math.max(
+    1,
+    window.innerHeight - visTop - spaceUnder - 8
+  );
+
+  const scale = Math.min(
+    1,
+    innerWidth / originalWidth,
+    availableHeight / originalHeight
+  );
+
   dashboard.style.zoom = String(Math.max(0.1, scale));
 }
+
 fetch('./irelands_housing_divide.json')
-  .then(response => {if(!response.ok) throw new Error('Could not fetch chart specification (' + response.status + ')');return response.json();})
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(
+        'Could not fetch chart specification (' +
+        response.status + ')'
+      );
+    }
+    return response.json();
+  })
   .then(spec => {
     delete spec.title;
-    return vegaEmbed('#vis', spec, {mode:'vega-lite',renderer:'svg',actions:false,bind:'#controls'});
+
+    return vegaEmbed('#vis', spec, {
+      mode: 'vega-lite',
+      renderer: 'svg',
+      actions: false,
+      bind: '#controls'
+    });
   })
   .then(() => {
     const svg = dashboard.querySelector('svg');
-    if(!svg) throw new Error('The dashboard SVG was not rendered');
-    // SVG dimensions include the axes, titles and map legend.
-    const chartBox = dashboard.querySelector('.vega-embed').getBoundingClientRect();
+
+    if (!svg) {
+      throw new Error('The dashboard SVG was not rendered');
+    }
+
+    // Measure the actual rendered chart.
+    // Do not assume a nested .vega-embed element exists.
+    const chartBox = svg.getBoundingClientRect();
+
     originalWidth = Math.ceil(chartBox.width);
     originalHeight = Math.ceil(chartBox.height);
+
+    if (!originalWidth || !originalHeight) {
+      throw new Error('The dashboard SVG has no measurable size');
+    }
+
     fitDashboard();
-    window.addEventListener('resize',fitDashboard,{passive:true});
+
+    window.addEventListener('resize', fitDashboard, {
+      passive: true
+    });
   })
-  .catch(err => {dashboard.textContent='Unable to load dashboard: '+err.message;console.error(err)});
+  .catch(err => {
+    dashboard.textContent =
+      'Unable to load dashboard: ' + err.message;
+    console.error(err);
+  });
 </script>
 </body>
 </html>
