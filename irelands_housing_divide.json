@@ -1,0 +1,1712 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Ireland's Housing Divide",
+    "anchor": "start",
+    "fontSize": 23,
+    "offset": 18
+  },
+  "params": [
+    {
+      "name": "selected_authority",
+      "value": [
+        {
+          "Authority Key": "DUN LAOGHAIRE RATHDOWN COUNTY COUNCIL"
+        }
+      ],
+      "select": {
+        "type": "point",
+        "fields": [
+          "Authority Key"
+        ],
+        "on": "click",
+        "clear": false,
+        "toggle": false
+      },
+      "bind": {
+        "input": "select",
+        "options": [
+          "CARLOW COUNTY COUNCIL",
+          "CAVAN COUNTY COUNCIL",
+          "CLARE COUNTY COUNCIL",
+          "CORK CITY COUNCIL",
+          "CORK COUNTY COUNCIL",
+          "DONEGAL COUNTY COUNCIL",
+          "DUBLIN CITY COUNCIL",
+          "DUN LAOGHAIRE RATHDOWN COUNTY COUNCIL",
+          "FINGAL COUNTY COUNCIL",
+          "GALWAY CITY COUNCIL",
+          "GALWAY COUNTY COUNCIL",
+          "KERRY COUNTY COUNCIL",
+          "KILDARE COUNTY COUNCIL",
+          "KILKENNY COUNTY COUNCIL",
+          "LAOIS COUNTY COUNCIL",
+          "LEITRIM COUNTY COUNCIL",
+          "LIMERICK CITY AND COUNTY COUNCIL",
+          "LONGFORD COUNTY COUNCIL",
+          "LOUTH COUNTY COUNCIL",
+          "MAYO COUNTY COUNCIL",
+          "MEATH COUNTY COUNCIL",
+          "MONAGHAN COUNTY COUNCIL",
+          "OFFALY COUNTY COUNCIL",
+          "ROSCOMMON COUNTY COUNCIL",
+          "SLIGO COUNTY COUNCIL",
+          "SOUTH DUBLIN COUNTY COUNCIL",
+          "TIPPERARY COUNTY COUNCIL",
+          "WATERFORD CITY AND COUNTY COUNCIL",
+          "WESTMEATH COUNTY COUNCIL",
+          "WEXFORD COUNTY COUNCIL",
+          "WICKLOW COUNTY COUNCIL"
+        ],
+        "labels": [
+          "Carlow",
+          "Cavan",
+          "Clare",
+          "Cork City",
+          "Cork",
+          "Donegal",
+          "Dublin City",
+          "Dún Laoghaire Rathdown",
+          "Fingal",
+          "Galway City",
+          "Galway",
+          "Kerry",
+          "Kildare",
+          "Kilkenny",
+          "Laois",
+          "Leitrim",
+          "Limerick",
+          "Longford",
+          "Louth",
+          "Mayo",
+          "Meath",
+          "Monaghan",
+          "Offaly",
+          "Roscommon",
+          "Sligo",
+          "South Dublin",
+          "Tipperary",
+          "Waterford",
+          "Westmeath",
+          "Wexford",
+          "Wicklow"
+        ],
+        "name": "Area: "
+      },
+      "views": [
+        "map",
+        "bars",
+        "scatter",
+        "slope"
+      ]
+    },
+    {
+      "name": "selected_year",
+      "value": 2024,
+      "bind": {
+        "input": "select",
+        "options": [
+          2022,
+          2023,
+          2024
+        ],
+        "name": "Year: "
+      }
+    },
+    {
+      "name": "hover",
+      "select": {
+        "type": "point",
+        "fields": [
+          "Authority Key"
+        ],
+        "on": "mouseover",
+        "clear": "mouseout"
+      },
+      "views": [
+        "map",
+        "bars",
+        "scatter",
+        "slope"
+      ]
+    }
+  ],
+  "hconcat": [
+    {
+      "hconcat": [
+        {
+          "title": {
+            "text": {
+              "expr": "'Affordability by local authority, ' + selected_year"
+            },
+            "anchor": "start",
+            "offset": 10
+          },
+          "width": 520,
+          "height": 650,
+          "projection": {
+            "type": "mercator"
+          },
+          "layer": [
+            {
+              "name": "map",
+              "data": {
+                "url": "https://raw.githubusercontent.com/Milena373/ireland-housing-infovis/refs/heads/main/data/housing_vegalite.csv",
+                "format": {
+                  "type": "csv",
+                  "parse": {
+                    "Year": "number",
+                    "Median Income": "number",
+                    "Median Price": "number",
+                    "Price to Income Ratio": "number",
+                    "Price Growth (%)": "number",
+                    "Income Growth (%)": "number",
+                    "Growth Gap (pp)": "number"
+                  }
+                }
+              },
+              "transform": [
+                {
+                  "filter": "datum.Year == selected_year"
+                },
+                {
+                  "lookup": "Authority Key",
+                  "from": {
+                    "data": {
+                      "url": "https://raw.githubusercontent.com/Milena373/ireland-housing-infovis/refs/heads/main/data/local_authorities.topojson",
+                      "format": {
+                        "type": "topojson",
+                        "feature": "local_authorities_wgs84"
+                      }
+                    },
+                    "key": "properties.Authority Key"
+                  },
+                  "as": "geo"
+                }
+              ],
+              "mark": {
+                "type": "geoshape",
+                "stroke": "white",
+                "strokeWidth": 0.7
+              },
+              "encoding": {
+                "shape": {
+                  "field": "geo",
+                  "type": "geojson"
+                },
+                "color": {
+                  "field": "Price to Income Ratio",
+                  "type": "quantitative",
+                  "title": "Price-to-income ratio",
+                  "scale": {
+                    "scheme": "blues",
+                    "domain": [
+                      2.9,
+                      5.3
+                    ],
+                    "clamp": true
+                  },
+                  "legend": {
+                    "orient": "bottom",
+                    "gradientLength": 300,
+                    "format": ".1f",
+                    "values": [
+                      3,
+                      3.5,
+                      4,
+                      4.5,
+                      5
+                    ],
+                    "direction": "horizontal"
+                  }
+                },
+                "tooltip": [
+                  {
+                    "field": "Local Authority",
+                    "type": "nominal"
+                  },
+                  {
+                    "field": "Year",
+                    "type": "ordinal"
+                  },
+                  {
+                    "field": "Median Price",
+                    "type": "quantitative",
+                    "title": "Median house price (€)",
+                    "format": ",.0f"
+                  },
+                  {
+                    "field": "Median Income",
+                    "type": "quantitative",
+                    "title": "Median purchaser income (€)",
+                    "format": ",.0f"
+                  },
+                  {
+                    "field": "Price to Income Ratio",
+                    "type": "quantitative",
+                    "title": "Price-to-income ratio",
+                    "format": ".2f"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "values": [
+                  {
+                    "Name": "Carlow",
+                    "Longitude": -6.82523,
+                    "Latitude": 52.69098
+                  },
+                  {
+                    "Name": "Cavan",
+                    "Longitude": -7.28958,
+                    "Latitude": 54.0351
+                  },
+                  {
+                    "Name": "Clare",
+                    "Longitude": -8.92997,
+                    "Latitude": 52.86341
+                  },
+                  {
+                    "Name": "Cork",
+                    "Longitude": -8.96277,
+                    "Latitude": 51.92185
+                  },
+                  {
+                    "Name": "Donegal",
+                    "Longitude": -7.95239,
+                    "Latitude": 54.92194
+                  },
+                  {
+                    "Name": "Galway",
+                    "Longitude": -8.88797,
+                    "Latitude": 53.34247
+                  },
+                  {
+                    "Name": "Kerry",
+                    "Longitude": -9.51929,
+                    "Latitude": 52.14673
+                  },
+                  {
+                    "Name": "Kildare",
+                    "Longitude": -6.82095,
+                    "Latitude": 53.15347
+                  },
+                  {
+                    "Name": "Kilkenny",
+                    "Longitude": -7.18713,
+                    "Latitude": 52.56832
+                  },
+                  {
+                    "Name": "Laois",
+                    "Longitude": -7.39364,
+                    "Latitude": 52.998
+                  },
+                  {
+                    "Name": "Leitrim",
+                    "Longitude": -8.05253,
+                    "Latitude": 54.14041
+                  },
+                  {
+                    "Name": "Limerick",
+                    "Longitude": -8.79475,
+                    "Latitude": 52.51719
+                  },
+                  {
+                    "Name": "Longford",
+                    "Longitude": -7.6,
+                    "Latitude": 53.8
+                  },
+                  {
+                    "Name": "Louth",
+                    "Longitude": -6.52025,
+                    "Latitude": 53.90829
+                  },
+                  {
+                    "Name": "Mayo",
+                    "Longitude": -9.22734,
+                    "Latitude": 53.91194
+                  },
+                  {
+                    "Name": "Meath",
+                    "Longitude": -6.58616,
+                    "Latitude": 53.64654
+                  },
+                  {
+                    "Name": "Monaghan",
+                    "Longitude": -6.9456,
+                    "Latitude": 54.16189
+                  },
+                  {
+                    "Name": "Offaly",
+                    "Longitude": -7.81329,
+                    "Latitude": 53.13743
+                  },
+                  {
+                    "Name": "Roscommon",
+                    "Longitude": -8.32,
+                    "Latitude": 53.62
+                  },
+                  {
+                    "Name": "Sligo",
+                    "Longitude": -8.72987,
+                    "Latitude": 54.1917
+                  },
+                  {
+                    "Name": "Tipperary",
+                    "Longitude": -7.89687,
+                    "Latitude": 52.68476
+                  },
+                  {
+                    "Name": "Waterford",
+                    "Longitude": -7.65928,
+                    "Latitude": 52.15095
+                  },
+                  {
+                    "Name": "Westmeath",
+                    "Longitude": -7.34661,
+                    "Latitude": 53.55818
+                  },
+                  {
+                    "Name": "Wexford",
+                    "Longitude": -6.60852,
+                    "Latitude": 52.46053
+                  },
+                  {
+                    "Name": "Wicklow",
+                    "Longitude": -6.38892,
+                    "Latitude": 52.95649
+                  }
+                ]
+              },
+              "mark": {
+                "type": "text",
+                "fontSize": 10,
+                "color": "#17324D",
+                "align": "center",
+                "baseline": "middle",
+                "interactive": false
+              },
+              "encoding": {
+                "longitude": {
+                  "field": "Longitude",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "Latitude",
+                  "type": "quantitative"
+                },
+                "text": {
+                  "field": "Name",
+                  "type": "nominal"
+                }
+              }
+            },
+            {
+              "data": {
+                "url": "https://raw.githubusercontent.com/Milena373/ireland-housing-infovis/refs/heads/main/data/housing_vegalite.csv",
+                "format": {
+                  "type": "csv",
+                  "parse": {
+                    "Year": "number",
+                    "Median Income": "number",
+                    "Median Price": "number",
+                    "Price to Income Ratio": "number",
+                    "Price Growth (%)": "number",
+                    "Income Growth (%)": "number",
+                    "Growth Gap (pp)": "number"
+                  }
+                }
+              },
+              "transform": [
+                {
+                  "filter": "datum.Year == selected_year"
+                },
+                {
+                  "filter": {
+                    "param": "hover",
+                    "empty": false
+                  }
+                },
+                {
+                  "lookup": "Authority Key",
+                  "from": {
+                    "data": {
+                      "url": "https://raw.githubusercontent.com/Milena373/ireland-housing-infovis/refs/heads/main/data/local_authorities.topojson",
+                      "format": {
+                        "type": "topojson",
+                        "feature": "local_authorities_wgs84"
+                      }
+                    },
+                    "key": "properties.Authority Key"
+                  },
+                  "as": "geo"
+                }
+              ],
+              "mark": {
+                "type": "geoshape",
+                "fillOpacity": 0,
+                "stroke": "#17324D",
+                "strokeWidth": 2.5,
+                "interactive": false
+              },
+              "encoding": {
+                "shape": {
+                  "field": "geo",
+                  "type": "geojson"
+                }
+              }
+            },
+            {
+              "data": {
+                "url": "https://raw.githubusercontent.com/Milena373/ireland-housing-infovis/refs/heads/main/data/housing_vegalite.csv",
+                "format": {
+                  "type": "csv",
+                  "parse": {
+                    "Year": "number",
+                    "Median Income": "number",
+                    "Median Price": "number",
+                    "Price to Income Ratio": "number",
+                    "Price Growth (%)": "number",
+                    "Income Growth (%)": "number",
+                    "Growth Gap (pp)": "number"
+                  }
+                }
+              },
+              "transform": [
+                {
+                  "filter": "datum.Year == selected_year"
+                },
+                {
+                  "filter": {
+                    "param": "selected_authority",
+                    "empty": false
+                  }
+                },
+                {
+                  "lookup": "Authority Key",
+                  "from": {
+                    "data": {
+                      "url": "https://raw.githubusercontent.com/Milena373/ireland-housing-infovis/refs/heads/main/data/local_authorities.topojson",
+                      "format": {
+                        "type": "topojson",
+                        "feature": "local_authorities_wgs84"
+                      }
+                    },
+                    "key": "properties.Authority Key"
+                  },
+                  "as": "geo"
+                }
+              ],
+              "mark": {
+                "type": "geoshape",
+                "fillOpacity": 0,
+                "stroke": "#E69F00",
+                "strokeWidth": 3,
+                "interactive": false
+              },
+              "encoding": {
+                "shape": {
+                  "field": "geo",
+                  "type": "geojson"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "text": {
+              "expr": "'Price-to-income ratio, ' + selected_year"
+            },
+            "anchor": "start",
+            "offset": 10
+          },
+          "width": 310,
+          "height": 620,
+          "data": {
+            "url": "https://raw.githubusercontent.com/Milena373/ireland-housing-infovis/refs/heads/main/data/housing_vegalite.csv",
+            "format": {
+              "type": "csv",
+              "parse": {
+                "Year": "number",
+                "Median Income": "number",
+                "Median Price": "number",
+                "Price to Income Ratio": "number",
+                "Price Growth (%)": "number",
+                "Income Growth (%)": "number",
+                "Growth Gap (pp)": "number"
+              }
+            }
+          },
+          "transform": [
+            {
+              "filter": "datum.Year == selected_year"
+            },
+            {
+              "calculate": "replace(replace(replace(datum['Local Authority'], ' City & County Council', ''), ' County Council', ''), ' City Council', ' City')",
+              "as": "Short Name"
+            }
+          ],
+          "encoding": {
+            "y": {
+              "field": "Short Name",
+              "type": "nominal",
+              "sort": "-x",
+              "title": null,
+              "axis": {
+                "labelFontSize": 10,
+                "labelLimit": 155,
+                "ticks": false,
+                "domain": false,
+                "labelPadding": 1
+              }
+            },
+            "x": {
+              "field": "Price to Income Ratio",
+              "type": "quantitative",
+              "title": null,
+              "axis": null,
+              "scale": {
+                "domain": [
+                  0,
+                  5.8
+                ]
+              }
+            }
+          },
+          "layer": [
+            {
+              "transform": [
+                {
+                  "aggregate": [
+                    {
+                      "op": "mean",
+                      "field": "Price to Income Ratio",
+                      "as": "avg"
+                    }
+                  ]
+                }
+              ],
+              "mark": {
+                "type": "rule",
+                "strokeDash": [
+                  4,
+                  3
+                ],
+                "color": "#999999",
+                "strokeWidth": 1,
+                "interactive": false
+              },
+              "encoding": {
+                "x": {
+                  "field": "avg",
+                  "type": "quantitative"
+                },
+                "y": {
+                  "value": 0
+                },
+                "y2": {
+                  "value": 450
+                }
+              }
+            },
+            {
+              "name": "bars",
+              "mark": {
+                "type": "bar",
+                "size": 10
+              },
+              "encoding": {
+                "color": {
+                  "condition": [
+                    {
+                      "param": "selected_authority",
+                      "empty": false,
+                      "value": "#E69F00"
+                    },
+                    {
+                      "param": "hover",
+                      "empty": false,
+                      "value": "#1F4E66"
+                    }
+                  ],
+                  "value": "#31708E"
+                },
+                "tooltip": [
+                  {
+                    "field": "Local Authority",
+                    "type": "nominal"
+                  },
+                  {
+                    "field": "Year",
+                    "type": "ordinal"
+                  },
+                  {
+                    "field": "Median Price",
+                    "type": "quantitative",
+                    "title": "Median house price (€)",
+                    "format": ",.0f"
+                  },
+                  {
+                    "field": "Median Income",
+                    "type": "quantitative",
+                    "title": "Median purchaser income (€)",
+                    "format": ",.0f"
+                  },
+                  {
+                    "field": "Price to Income Ratio",
+                    "type": "quantitative",
+                    "title": "Price-to-income ratio",
+                    "format": ".2f"
+                  }
+                ]
+              }
+            },
+            {
+              "mark": {
+                "type": "text",
+                "align": "left",
+                "baseline": "middle",
+                "dx": 5,
+                "fontSize": 10,
+                "color": "#333333",
+                "interactive": false
+              },
+              "encoding": {
+                "text": {
+                  "field": "Price to Income Ratio",
+                  "type": "quantitative",
+                  "format": ".2f"
+                }
+              }
+            },
+            {
+              "transform": [
+                {
+                  "aggregate": [
+                    {
+                      "op": "mean",
+                      "field": "Price to Income Ratio",
+                      "as": "avg"
+                    }
+                  ]
+                },
+                {
+                  "calculate": "'Mean ' + format(datum.avg, '.2f')",
+                  "as": "avg_label"
+                }
+              ],
+              "mark": {
+                "type": "text",
+                "align": "left",
+                "baseline": "bottom",
+                "dx": 6,
+                "fontSize": 10,
+                "fontStyle": "normal",
+                "color": "#555555",
+                "interactive": false,
+                "dy": -2,
+                "fontWeight": "bold",
+                "clip": false
+              },
+              "encoding": {
+                "x": {
+                  "field": "avg",
+                  "type": "quantitative"
+                },
+                "y": {
+                  "value": 0
+                },
+                "text": {
+                  "field": "avg_label",
+                  "type": "nominal"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "spacing": 0,
+      "align": "all"
+    },
+    {
+      "vconcat": [
+        {
+          "title": {
+            "text": {
+              "expr": "'Price growth vs income growth, ' + selected_year"
+            },
+            "anchor": "start",
+            "offset": 10
+          },
+          "width": 320,
+          "height": 240,
+          "data": {
+            "url": "https://raw.githubusercontent.com/Milena373/ireland-housing-infovis/refs/heads/main/data/housing_vegalite.csv",
+            "format": {
+              "type": "csv",
+              "parse": {
+                "Year": "number",
+                "Median Income": "number",
+                "Median Price": "number",
+                "Price to Income Ratio": "number",
+                "Price Growth (%)": "number",
+                "Income Growth (%)": "number",
+                "Growth Gap (pp)": "number"
+              }
+            }
+          },
+          "layer": [
+            {
+              "data": {
+                "values": [
+                  {
+                    "g": -10
+                  },
+                  {
+                    "g": 30
+                  }
+                ]
+              },
+              "mark": {
+                "type": "line",
+                "color": "#888888",
+                "strokeWidth": 1.5,
+                "strokeDash": [
+                  6,
+                  4
+                ],
+                "interactive": false
+              },
+              "encoding": {
+                "x": {
+                  "field": "g",
+                  "type": "quantitative",
+                  "scale": {
+                    "domain": [
+                      -10,
+                      30
+                    ]
+                  }
+                },
+                "y": {
+                  "field": "g",
+                  "type": "quantitative",
+                  "scale": {
+                    "domain": [
+                      -10,
+                      30
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "data": {
+                "values": [
+                  {
+                    "x": -9,
+                    "y": 29.3,
+                    "t": "Prices outpaced incomes"
+                  }
+                ]
+              },
+              "mark": {
+                "type": "text",
+                "fontSize": 9,
+                "fontStyle": "italic",
+                "color": "#777777",
+                "baseline": "middle",
+                "align": "left",
+                "interactive": false
+              },
+              "encoding": {
+                "x": {
+                  "field": "x",
+                  "type": "quantitative",
+                  "scale": {
+                    "domain": [
+                      -10,
+                      30
+                    ]
+                  }
+                },
+                "y": {
+                  "field": "y",
+                  "type": "quantitative",
+                  "scale": {
+                    "domain": [
+                      -10,
+                      30
+                    ]
+                  }
+                },
+                "text": {
+                  "field": "t",
+                  "type": "nominal"
+                }
+              }
+            },
+            {
+              "data": {
+                "values": [
+                  {
+                    "x": 29.5,
+                    "y": -8,
+                    "t": "Incomes outpaced prices"
+                  }
+                ]
+              },
+              "mark": {
+                "type": "text",
+                "fontSize": 9,
+                "fontStyle": "italic",
+                "color": "#777777",
+                "baseline": "middle",
+                "align": "right",
+                "interactive": false
+              },
+              "encoding": {
+                "x": {
+                  "field": "x",
+                  "type": "quantitative",
+                  "scale": {
+                    "domain": [
+                      -10,
+                      30
+                    ]
+                  }
+                },
+                "y": {
+                  "field": "y",
+                  "type": "quantitative",
+                  "scale": {
+                    "domain": [
+                      -10,
+                      30
+                    ]
+                  }
+                },
+                "text": {
+                  "field": "t",
+                  "type": "nominal"
+                }
+              }
+            },
+            {
+              "name": "scatter",
+              "transform": [
+                {
+                  "filter": "datum.Year == selected_year"
+                }
+              ],
+              "mark": {
+                "type": "point",
+                "filled": true,
+                "stroke": "white",
+                "strokeWidth": 1.7,
+                "opacity": 0.9
+              },
+              "encoding": {
+                "x": {
+                  "field": "Income Growth (%)",
+                  "type": "quantitative",
+                  "title": "Income growth since 2022 (%)",
+                  "scale": {
+                    "domain": [
+                      -10,
+                      30
+                    ]
+                  },
+                  "axis": {
+                    "tickCount": 5,
+                    "grid": true
+                  }
+                },
+                "y": {
+                  "field": "Price Growth (%)",
+                  "type": "quantitative",
+                  "title": "Price growth since 2022 (%)",
+                  "scale": {
+                    "domain": [
+                      -10,
+                      30
+                    ]
+                  },
+                  "axis": {
+                    "tickCount": 5,
+                    "grid": true
+                  }
+                },
+                "color": {
+                  "condition": [
+                    {
+                      "param": "selected_authority",
+                      "empty": false,
+                      "value": "#E69F00"
+                    },
+                    {
+                      "param": "hover",
+                      "empty": false,
+                      "value": "#1F4E66"
+                    }
+                  ],
+                  "value": "#31708E"
+                },
+                "size": {
+                  "condition": [
+                    {
+                      "param": "selected_authority",
+                      "empty": false,
+                      "value": 245
+                    },
+                    {
+                      "param": "hover",
+                      "empty": false,
+                      "value": 160
+                    }
+                  ],
+                  "value": 80
+                },
+                "tooltip": [
+                  {
+                    "field": "Local Authority",
+                    "type": "nominal"
+                  },
+                  {
+                    "field": "Year",
+                    "type": "ordinal"
+                  },
+                  {
+                    "field": "Price Growth (%)",
+                    "type": "quantitative",
+                    "title": "House price growth (%)",
+                    "format": ".1f"
+                  },
+                  {
+                    "field": "Income Growth (%)",
+                    "type": "quantitative",
+                    "title": "Purchaser income growth (%)",
+                    "format": ".1f"
+                  },
+                  {
+                    "field": "Growth Gap (pp)",
+                    "type": "quantitative",
+                    "title": "Growth gap (pp)",
+                    "format": "+.1f"
+                  }
+                ]
+              }
+            },
+            {
+              "transform": [
+                {
+                  "filter": "datum.Year == selected_year"
+                },
+                {
+                  "calculate": "replace(replace(replace(datum['Local Authority'], ' City & County Council', ''), ' County Council', ''), ' City Council', ' City')",
+                  "as": "Short Name"
+                },
+                {
+                  "window": [
+                    {
+                      "op": "rank",
+                      "as": "rank"
+                    }
+                  ],
+                  "sort": [
+                    {
+                      "field": "Growth Gap (pp)",
+                      "order": "descending"
+                    }
+                  ]
+                },
+                {
+                  "filter": "datum.rank <= 2 && selected_year > 2022 && datum['Authority Key'] != selected_authority_Authority_Key"
+                }
+              ],
+              "mark": {
+                "type": "text",
+                "align": "right",
+                "dx": -8,
+                "fontSize": 10,
+                "color": "#333333",
+                "interactive": false
+              },
+              "encoding": {
+                "x": {
+                  "field": "Income Growth (%)",
+                  "type": "quantitative",
+                  "title": "Income growth since 2022 (%)",
+                  "scale": {
+                    "domain": [
+                      -10,
+                      30
+                    ]
+                  },
+                  "axis": {
+                    "tickCount": 5,
+                    "grid": true
+                  }
+                },
+                "y": {
+                  "field": "Price Growth (%)",
+                  "type": "quantitative",
+                  "title": "Price growth since 2022 (%)",
+                  "scale": {
+                    "domain": [
+                      -10,
+                      30
+                    ]
+                  },
+                  "axis": {
+                    "tickCount": 5,
+                    "grid": true
+                  }
+                },
+                "text": {
+                  "field": "Short Name",
+                  "type": "nominal"
+                }
+              }
+            },
+            {
+              "transform": [
+                {
+                  "filter": "datum.Year == selected_year"
+                },
+                {
+                  "calculate": "replace(replace(replace(datum['Local Authority'], ' City & County Council', ''), ' County Council', ''), ' City Council', ' City')",
+                  "as": "Short Name"
+                },
+                {
+                  "filter": {
+                    "param": "selected_authority",
+                    "empty": false
+                  }
+                },
+                {
+                  "filter": "selected_year > 2022"
+                }
+              ],
+              "mark": {
+                "type": "text",
+                "align": "left",
+                "dx": 10,
+                "dy": 9,
+                "fontSize": 10,
+                "fontWeight": "bold",
+                "color": "#B37700",
+                "interactive": false
+              },
+              "encoding": {
+                "x": {
+                  "field": "Income Growth (%)",
+                  "type": "quantitative",
+                  "title": "Income growth since 2022 (%)",
+                  "scale": {
+                    "domain": [
+                      -10,
+                      30
+                    ]
+                  },
+                  "axis": {
+                    "tickCount": 5,
+                    "grid": true
+                  }
+                },
+                "y": {
+                  "field": "Price Growth (%)",
+                  "type": "quantitative",
+                  "title": "Price growth since 2022 (%)",
+                  "scale": {
+                    "domain": [
+                      -10,
+                      30
+                    ]
+                  },
+                  "axis": {
+                    "tickCount": 5,
+                    "grid": true
+                  }
+                },
+                "text": {
+                  "field": "Short Name",
+                  "type": "nominal"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "text": "Affordability change, 2022 to 2024",
+            "anchor": "start",
+            "offset": 10
+          },
+          "width": 320,
+          "height": 240,
+          "data": {
+            "url": "https://raw.githubusercontent.com/Milena373/ireland-housing-infovis/refs/heads/main/data/housing_vegalite.csv",
+            "format": {
+              "type": "csv",
+              "parse": {
+                "Year": "number",
+                "Median Income": "number",
+                "Median Price": "number",
+                "Price to Income Ratio": "number",
+                "Price Growth (%)": "number",
+                "Income Growth (%)": "number",
+                "Growth Gap (pp)": "number"
+              }
+            }
+          },
+          "transform": [
+            {
+              "filter": "datum.Year == 2022 || datum.Year == 2024"
+            },
+            {
+              "calculate": "replace(replace(replace(datum['Local Authority'], ' City & County Council', ''), ' County Council', ''), ' City Council', ' City')",
+              "as": "Short Name"
+            }
+          ],
+          "layer": [
+            {
+              "mark": {
+                "type": "line",
+                "strokeWidth": 1.2
+              },
+              "encoding": {
+                "x": {
+                  "field": "Year",
+                  "type": "ordinal",
+                  "title": "Year",
+                  "scale": {
+                    "padding": 0.55
+                  },
+                  "axis": {
+                    "labelAngle": 0,
+                    "labelFontSize": 11
+                  }
+                },
+                "y": {
+                  "field": "Price to Income Ratio",
+                  "type": "quantitative",
+                  "title": "Price-to-income ratio",
+                  "scale": {
+                    "domain": [
+                      2.8,
+                      5.4
+                    ]
+                  },
+                  "axis": {
+                    "tickCount": 5
+                  }
+                },
+                "detail": {
+                  "field": "Authority Key",
+                  "type": "nominal"
+                },
+                "color": {
+                  "condition": {
+                    "param": "hover",
+                    "empty": false,
+                    "value": "#1F4E66"
+                  },
+                  "value": "#B8C0C6"
+                },
+                "opacity": {
+                  "condition": {
+                    "param": "hover",
+                    "empty": false,
+                    "value": 1
+                  },
+                  "value": 0.7
+                }
+              }
+            },
+            {
+              "name": "slope",
+              "mark": {
+                "type": "point",
+                "filled": true,
+                "size": 28
+              },
+              "encoding": {
+                "x": {
+                  "field": "Year",
+                  "type": "ordinal",
+                  "title": "Year",
+                  "scale": {
+                    "padding": 0.55
+                  },
+                  "axis": {
+                    "labelAngle": 0,
+                    "labelFontSize": 11
+                  }
+                },
+                "y": {
+                  "field": "Price to Income Ratio",
+                  "type": "quantitative",
+                  "title": "Price-to-income ratio",
+                  "scale": {
+                    "domain": [
+                      2.8,
+                      5.4
+                    ]
+                  },
+                  "axis": {
+                    "tickCount": 5
+                  }
+                },
+                "color": {
+                  "condition": {
+                    "param": "hover",
+                    "empty": false,
+                    "value": "#1F4E66"
+                  },
+                  "value": "#B8C0C6"
+                },
+                "tooltip": [
+                  {
+                    "field": "Local Authority",
+                    "type": "nominal"
+                  },
+                  {
+                    "field": "Year",
+                    "type": "ordinal"
+                  },
+                  {
+                    "field": "Price to Income Ratio",
+                    "type": "quantitative",
+                    "title": "Price-to-income ratio",
+                    "format": ".2f"
+                  }
+                ]
+              }
+            },
+            {
+              "transform": [
+                {
+                  "aggregate": [
+                    {
+                      "op": "mean",
+                      "field": "Price to Income Ratio",
+                      "as": "Ratio"
+                    }
+                  ],
+                  "groupby": [
+                    "Year"
+                  ]
+                }
+              ],
+              "mark": {
+                "type": "line",
+                "point": {
+                  "filled": true,
+                  "size": 40,
+                  "color": "#444444"
+                },
+                "color": "#444444",
+                "strokeWidth": 2,
+                "strokeDash": [
+                  6,
+                  4
+                ],
+                "interactive": false
+              },
+              "encoding": {
+                "x": {
+                  "field": "Year",
+                  "type": "ordinal",
+                  "title": "Year",
+                  "scale": {
+                    "padding": 0.55
+                  },
+                  "axis": {
+                    "labelAngle": 0,
+                    "labelFontSize": 11
+                  }
+                },
+                "y": {
+                  "field": "Ratio",
+                  "type": "quantitative",
+                  "scale": {
+                    "domain": [
+                      2.8,
+                      5.4
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "transform": [
+                {
+                  "filter": {
+                    "param": "selected_authority",
+                    "empty": false
+                  }
+                }
+              ],
+              "mark": {
+                "type": "line",
+                "point": {
+                  "filled": true,
+                  "size": 70,
+                  "color": "#E69F00"
+                },
+                "color": "#E69F00",
+                "strokeWidth": 3.5,
+                "interactive": false
+              },
+              "encoding": {
+                "x": {
+                  "field": "Year",
+                  "type": "ordinal",
+                  "title": "Year",
+                  "scale": {
+                    "padding": 0.55
+                  },
+                  "axis": {
+                    "labelAngle": 0,
+                    "labelFontSize": 11
+                  }
+                },
+                "y": {
+                  "field": "Price to Income Ratio",
+                  "type": "quantitative",
+                  "title": "Price-to-income ratio",
+                  "scale": {
+                    "domain": [
+                      2.8,
+                      5.4
+                    ]
+                  },
+                  "axis": {
+                    "tickCount": 5
+                  }
+                }
+              }
+            },
+            {
+              "transform": [
+                {
+                  "filter": {
+                    "param": "selected_authority",
+                    "empty": false
+                  }
+                },
+                {
+                  "filter": "datum.Year == 2024"
+                }
+              ],
+              "mark": {
+                "type": "text",
+                "align": "left",
+                "dx": 9,
+                "fontSize": 11,
+                "fontWeight": "bold",
+                "color": "#B37700",
+                "interactive": false
+              },
+              "encoding": {
+                "x": {
+                  "field": "Year",
+                  "type": "ordinal",
+                  "title": "Year",
+                  "scale": {
+                    "padding": 0.55
+                  },
+                  "axis": {
+                    "labelAngle": 0,
+                    "labelFontSize": 11
+                  }
+                },
+                "y": {
+                  "field": "Price to Income Ratio",
+                  "type": "quantitative",
+                  "title": "Price-to-income ratio",
+                  "scale": {
+                    "domain": [
+                      2.8,
+                      5.4
+                    ]
+                  },
+                  "axis": {
+                    "tickCount": 5
+                  }
+                },
+                "text": {
+                  "field": "Price to Income Ratio",
+                  "type": "quantitative",
+                  "format": ".2f"
+                }
+              }
+            },
+            {
+              "transform": [
+                {
+                  "filter": {
+                    "param": "selected_authority",
+                    "empty": false
+                  }
+                },
+                {
+                  "filter": "datum.Year == 2022"
+                }
+              ],
+              "mark": {
+                "type": "text",
+                "align": "right",
+                "dx": -9,
+                "fontSize": 11,
+                "fontWeight": "bold",
+                "color": "#B37700",
+                "interactive": false
+              },
+              "encoding": {
+                "x": {
+                  "field": "Year",
+                  "type": "ordinal",
+                  "title": "Year",
+                  "scale": {
+                    "padding": 0.55
+                  },
+                  "axis": {
+                    "labelAngle": 0,
+                    "labelFontSize": 11
+                  }
+                },
+                "y": {
+                  "field": "Price to Income Ratio",
+                  "type": "quantitative",
+                  "title": "Price-to-income ratio",
+                  "scale": {
+                    "domain": [
+                      2.8,
+                      5.4
+                    ]
+                  },
+                  "axis": {
+                    "tickCount": 5
+                  }
+                },
+                "text": {
+                  "field": "Price to Income Ratio",
+                  "type": "quantitative",
+                  "format": ".2f"
+                }
+              }
+            },
+            {
+              "transform": [
+                {
+                  "aggregate": [
+                    {
+                      "op": "mean",
+                      "field": "Price to Income Ratio",
+                      "as": "Ratio"
+                    }
+                  ],
+                  "groupby": [
+                    "Year"
+                  ]
+                },
+                {
+                  "filter": "datum.Year == 2024"
+                }
+              ],
+              "mark": {
+                "type": "text",
+                "align": "left",
+                "dx": 9,
+                "dy": 11,
+                "fontSize": 10,
+                "color": "#444444",
+                "interactive": false
+              },
+              "encoding": {
+                "x": {
+                  "field": "Year",
+                  "type": "ordinal",
+                  "title": "Year",
+                  "scale": {
+                    "padding": 0.55
+                  },
+                  "axis": {
+                    "labelAngle": 0,
+                    "labelFontSize": 11
+                  }
+                },
+                "y": {
+                  "field": "Ratio",
+                  "type": "quantitative",
+                  "scale": {
+                    "domain": [
+                      2.8,
+                      5.4
+                    ]
+                  }
+                },
+                "text": {
+                  "field": "Ratio",
+                  "type": "quantitative",
+                  "format": ".2f"
+                }
+              }
+            },
+            {
+              "transform": [
+                {
+                  "aggregate": [
+                    {
+                      "op": "mean",
+                      "field": "Price to Income Ratio",
+                      "as": "Ratio"
+                    }
+                  ],
+                  "groupby": [
+                    "Year"
+                  ]
+                },
+                {
+                  "filter": "datum.Year == 2022"
+                }
+              ],
+              "mark": {
+                "type": "text",
+                "align": "right",
+                "dx": -9,
+                "dy": 11,
+                "fontSize": 10,
+                "color": "#444444",
+                "interactive": false
+              },
+              "encoding": {
+                "x": {
+                  "field": "Year",
+                  "type": "ordinal",
+                  "title": "Year",
+                  "scale": {
+                    "padding": 0.55
+                  },
+                  "axis": {
+                    "labelAngle": 0,
+                    "labelFontSize": 11
+                  }
+                },
+                "y": {
+                  "field": "Ratio",
+                  "type": "quantitative",
+                  "scale": {
+                    "domain": [
+                      2.8,
+                      5.4
+                    ]
+                  }
+                },
+                "text": {
+                  "field": "Ratio",
+                  "type": "quantitative",
+                  "format": ".2f"
+                }
+              }
+            },
+            {
+              "transform": [
+                {
+                  "aggregate": [
+                    {
+                      "op": "mean",
+                      "field": "Price to Income Ratio",
+                      "as": "Ratio"
+                    }
+                  ],
+                  "groupby": [
+                    "Year"
+                  ]
+                },
+                {
+                  "calculate": "'Mean'",
+                  "as": "Label"
+                },
+                {
+                  "filter": "datum.Year == 2024"
+                }
+              ],
+              "mark": {
+                "type": "text",
+                "align": "left",
+                "dx": 34,
+                "dy": -2,
+                "fontSize": 10,
+                "fontWeight": "bold",
+                "color": "#444444",
+                "interactive": false
+              },
+              "encoding": {
+                "x": {
+                  "field": "Year",
+                  "type": "ordinal",
+                  "title": "Year",
+                  "scale": {
+                    "padding": 0.55
+                  },
+                  "axis": {
+                    "labelAngle": 0,
+                    "labelFontSize": 11
+                  }
+                },
+                "y": {
+                  "field": "Ratio",
+                  "type": "quantitative",
+                  "scale": {
+                    "domain": [
+                      2.8,
+                      5.4
+                    ]
+                  }
+                },
+                "text": {
+                  "field": "Label"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "spacing": 65,
+      "align": "all"
+    }
+  ],
+  "spacing": 0,
+  "config": {
+    "view": {
+      "stroke": null
+    },
+    "title": {
+      "fontSize": 14,
+      "anchor": "start",
+      "subtitleFontSize": 11,
+      "subtitleColor": "#666666"
+    },
+    "axis": {
+      "labelFontSize": 10,
+      "titleFontSize": 11,
+      "gridColor": "#E6E6E6",
+      "domainColor": "#999999"
+    },
+    "legend": {
+      "labelFontSize": 10,
+      "titleFontSize": 11,
+      "titleLimit": 300
+    },
+    "concat": {
+      "spacing": 0
+    }
+  },
+  "align": "all"
+}
