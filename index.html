@@ -111,7 +111,6 @@ footer{
 <body>
 <main>
 <header class="toprow">
-  <h1>Ireland's Housing Divide</h1>
   <div id="controls" class="toolbar"
        aria-label="Dashboard controls"></div>
 </header>
@@ -179,7 +178,6 @@ fetch('./irelands_housing_divide.json')
     return response.json();
   })
   .then(spec => {
-    delete spec.title;
 
     return vegaEmbed('#vis', spec, {
       mode: 'vega-lite',
