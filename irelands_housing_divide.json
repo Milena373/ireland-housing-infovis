@@ -140,16 +140,15 @@
               "expr": "'Affordability by local authority, ' + selected_year"
             },
             "anchor": "start",
-            "offset": 12
+            "offset": 10
           },
-          "width": 505,
-          "height": 565,
+          "width": 520,
+          "height": 575,
           "projection": {
             "type": "mercator"
           },
           "layer": [
             {
-              "name": "map",
               "data": {
                 "url": "https://raw.githubusercontent.com/Milena373/ireland-housing-infovis/refs/heads/main/data/housing_vegalite.csv",
                 "format": {
@@ -187,7 +186,8 @@
               "mark": {
                 "type": "geoshape",
                 "stroke": "white",
-                "strokeWidth": 0.7
+                "strokeWidth": 0.7,
+                "interactive": false
               },
               "encoding": {
                 "shape": {
@@ -221,35 +221,7 @@
                     "titleOrient": "top",
                     "offset": 8
                   }
-                },
-                "tooltip": [
-                  {
-                    "field": "Local Authority",
-                    "type": "nominal"
-                  },
-                  {
-                    "field": "Year",
-                    "type": "ordinal"
-                  },
-                  {
-                    "field": "Median Price",
-                    "type": "quantitative",
-                    "title": "Median house price (€)",
-                    "format": ",.0f"
-                  },
-                  {
-                    "field": "Median Income",
-                    "type": "quantitative",
-                    "title": "Median purchaser income (€)",
-                    "format": ",.0f"
-                  },
-                  {
-                    "field": "Price to Income Ratio",
-                    "type": "quantitative",
-                    "title": "Price-to-income ratio",
-                    "format": ".2f"
-                  }
-                ]
+                }
               }
             },
             {
@@ -426,12 +398,6 @@
                   "filter": "datum.Year == selected_year"
                 },
                 {
-                  "filter": {
-                    "param": "hover",
-                    "empty": false
-                  }
-                },
-                {
                   "lookup": "Authority Key",
                   "from": {
                     "data": {
@@ -451,12 +417,21 @@
                 "fillOpacity": 0,
                 "stroke": "#17324D",
                 "strokeWidth": 2.5,
-                "interactive": false
+                "interactive": false,
+                "strokeOpacity": 0
               },
               "encoding": {
                 "shape": {
                   "field": "geo",
                   "type": "geojson"
+                },
+                "strokeOpacity": {
+                  "condition": {
+                    "param": "hover",
+                    "empty": false,
+                    "value": 1
+                  },
+                  "value": 0
                 }
               }
             },
@@ -514,6 +489,84 @@
                   "type": "geojson"
                 }
               }
+            },
+            {
+              "name": "map",
+              "data": {
+                "url": "https://raw.githubusercontent.com/Milena373/ireland-housing-infovis/refs/heads/main/data/housing_vegalite.csv",
+                "format": {
+                  "type": "csv",
+                  "parse": {
+                    "Year": "number",
+                    "Median Income": "number",
+                    "Median Price": "number",
+                    "Price to Income Ratio": "number",
+                    "Price Growth (%)": "number",
+                    "Income Growth (%)": "number",
+                    "Growth Gap (pp)": "number"
+                  }
+                }
+              },
+              "transform": [
+                {
+                  "filter": "datum.Year == selected_year"
+                },
+                {
+                  "lookup": "Authority Key",
+                  "from": {
+                    "data": {
+                      "url": "https://raw.githubusercontent.com/Milena373/ireland-housing-infovis/refs/heads/main/data/local_authorities.topojson",
+                      "format": {
+                        "type": "topojson",
+                        "feature": "local_authorities_wgs84"
+                      }
+                    },
+                    "key": "properties.Authority Key"
+                  },
+                  "as": "geo"
+                }
+              ],
+              "mark": {
+                "type": "geoshape",
+                "fill": "#FFFFFF",
+                "fillOpacity": 0.001,
+                "strokeOpacity": 0,
+                "strokeWidth": 0
+              },
+              "encoding": {
+                "shape": {
+                  "field": "geo",
+                  "type": "geojson"
+                },
+                "tooltip": [
+                  {
+                    "field": "Local Authority",
+                    "type": "nominal"
+                  },
+                  {
+                    "field": "Year",
+                    "type": "ordinal"
+                  },
+                  {
+                    "field": "Median Price",
+                    "type": "quantitative",
+                    "title": "Median house price (€)",
+                    "format": ",.0f"
+                  },
+                  {
+                    "field": "Median Income",
+                    "type": "quantitative",
+                    "title": "Median purchaser income (€)",
+                    "format": ",.0f"
+                  },
+                  {
+                    "field": "Price to Income Ratio",
+                    "type": "quantitative",
+                    "title": "Price-to-income ratio",
+                    "format": ".2f"
+                  }
+                ]
+              }
             }
           ]
         },
@@ -523,10 +576,10 @@
               "expr": "'Price-to-income ratio, ' + selected_year"
             },
             "anchor": "start",
-            "offset": 12
+            "offset": 10
           },
-          "width": 300,
-          "height": 590,
+          "width": 310,
+          "height": 620,
           "data": {
             "url": "https://raw.githubusercontent.com/Milena373/ireland-housing-infovis/refs/heads/main/data/housing_vegalite.csv",
             "format": {
@@ -730,9 +783,8 @@
           ]
         }
       ],
-      "spacing": 18,
-      "align": "none",
-      "center": false
+      "spacing": 10,
+      "align": "all"
     },
     {
       "vconcat": [
@@ -742,10 +794,10 @@
               "expr": "'Price growth vs income growth, ' + selected_year"
             },
             "anchor": "start",
-            "offset": 12
+            "offset": 10
           },
-          "width": 315,
-          "height": 225,
+          "width": 320,
+          "height": 240,
           "data": {
             "url": "https://raw.githubusercontent.com/Milena373/ireland-housing-infovis/refs/heads/main/data/housing_vegalite.csv",
             "format": {
@@ -1147,10 +1199,10 @@
           "title": {
             "text": "Affordability change, 2022 to 2024",
             "anchor": "start",
-            "offset": 12
+            "offset": 10
           },
-          "width": 315,
-          "height": 225,
+          "width": 320,
+          "height": 240,
           "data": {
             "url": "https://raw.githubusercontent.com/Milena373/ireland-housing-infovis/refs/heads/main/data/housing_vegalite.csv",
             "format": {
@@ -1681,12 +1733,11 @@
           ]
         }
       ],
-      "spacing": 76,
-      "align": "none",
-      "center": false
+      "spacing": 38,
+      "align": "all"
     }
   ],
-  "spacing": 48,
+  "spacing": 66,
   "config": {
     "view": {
       "stroke": null
@@ -1709,10 +1760,8 @@
       "titleLimit": 300
     },
     "concat": {
-      "spacing": 18
+      "spacing": 38
     }
   },
-  "align": "none",
-  "center": false,
-  "bounds": "full"
+  "align": "all"
 }
