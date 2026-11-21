@@ -2,9 +2,14 @@
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {
     "text": "Ireland's Housing Divide",
+    "subtitle": "Are incomes keeping pace with rising house prices? Across most Irish local authorities, the answer is no — and the gap varies considerably by location.",
     "anchor": "start",
     "fontSize": 23,
-    "offset": 18
+    "offset": 18,
+    "subtitleFontSize": 13,
+    "subtitleColor": "#64748b",
+    "subtitlePadding": 7,
+    "subtitleFontWeight": "normal"
   },
   "params": [
     {
