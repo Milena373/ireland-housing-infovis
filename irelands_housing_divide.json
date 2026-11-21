@@ -140,10 +140,10 @@
               "expr": "'Affordability by local authority, ' + selected_year"
             },
             "anchor": "start",
-            "offset": 10
+            "offset": 12
           },
-          "width": 520,
-          "height": 575,
+          "width": 505,
+          "height": 565,
           "projection": {
             "type": "mercator"
           },
@@ -523,10 +523,10 @@
               "expr": "'Price-to-income ratio, ' + selected_year"
             },
             "anchor": "start",
-            "offset": 10
+            "offset": 12
           },
-          "width": 310,
-          "height": 620,
+          "width": 300,
+          "height": 590,
           "data": {
             "url": "https://raw.githubusercontent.com/Milena373/ireland-housing-infovis/refs/heads/main/data/housing_vegalite.csv",
             "format": {
@@ -730,8 +730,9 @@
           ]
         }
       ],
-      "spacing": 0,
-      "align": "all"
+      "spacing": 18,
+      "align": "none",
+      "center": false
     },
     {
       "vconcat": [
@@ -741,10 +742,10 @@
               "expr": "'Price growth vs income growth, ' + selected_year"
             },
             "anchor": "start",
-            "offset": 10
+            "offset": 12
           },
-          "width": 320,
-          "height": 240,
+          "width": 315,
+          "height": 225,
           "data": {
             "url": "https://raw.githubusercontent.com/Milena373/ireland-housing-infovis/refs/heads/main/data/housing_vegalite.csv",
             "format": {
@@ -1146,10 +1147,10 @@
           "title": {
             "text": "Affordability change, 2022 to 2024",
             "anchor": "start",
-            "offset": 10
+            "offset": 12
           },
-          "width": 320,
-          "height": 240,
+          "width": 315,
+          "height": 225,
           "data": {
             "url": "https://raw.githubusercontent.com/Milena373/ireland-housing-infovis/refs/heads/main/data/housing_vegalite.csv",
             "format": {
@@ -1680,11 +1681,12 @@
           ]
         }
       ],
-      "spacing": 65,
-      "align": "all"
+      "spacing": 76,
+      "align": "none",
+      "center": false
     }
   ],
-  "spacing": 0,
+  "spacing": 48,
   "config": {
     "view": {
       "stroke": null
@@ -1707,8 +1709,10 @@
       "titleLimit": 300
     },
     "concat": {
-      "spacing": 0
+      "spacing": 18
     }
   },
-  "align": "all"
+  "align": "none",
+  "center": false,
+  "bounds": "full"
 }
