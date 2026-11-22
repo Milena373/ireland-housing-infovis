@@ -1,16 +1,18 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "title": {
-    "text": "Ireland's Housing Divide",
-    "subtitle": "Are incomes keeping pace with rising house prices? Across most Irish local authorities, the answer is no — and the gap varies considerably by location.",
-    "anchor": "start",
-    "fontSize": 23,
-    "offset": 18,
-    "subtitleFontSize": 13,
-    "subtitleColor": "#64748b",
-    "subtitlePadding": 7,
-    "subtitleFontWeight": "normal"
-  },
+
+    "title": {
+      "text": "Ireland's Housing Divide",
+      "subtitle": "Between 2022 and 2024, house prices grew faster than purchaser incomes in 21 of Ireland's 31 local authorities, widening affordability pressures across much of the country.",
+      "anchor": "start",
+      "fontSize": 23,
+      "offset": 18,
+      "subtitleFontSize": 13,
+      "subtitleColor": "#64748b",
+      "subtitlePadding": 7,
+      "subtitleFontWeight": "normal"
+    }
+,
   "params": [
     {
       "name": "selected_authority",
@@ -142,14 +144,14 @@
         {
           "title": {
             "text": {
-              "expr": "'Affordability by local authority, ' + selected_year"
+              "expr": "'House price-to-income ratio by local authority, ' + selected_year"
             },
             "anchor": "start",
-            "offset": 10
+            "offset": 15
           },
           "width": 520,
           "height": 575,
-          "projection": {
+          "projection": { 
             "type": "mercator"
           },
           "layer": [
@@ -578,10 +580,10 @@
         {
           "title": {
             "text": {
-              "expr": "'Price-to-income ratio, ' + selected_year"
+              "expr": "'Local authorities ranked by price-to-income ratio, ' + selected_year"
             },
             "anchor": "start",
-            "offset": 10,
+            "offset": 15,
             "dy": 10
           },
           "width": 310,
@@ -797,10 +799,10 @@
         {
           "title": {
             "text": {
-              "expr": "'Price growth vs income growth, ' + selected_year"
+              "expr": "'House price growth vs purchaser income growth, ' + selected_year"
             },
             "anchor": "start",
-            "offset": 10
+            "offset": 15
           },
           "width": 320,
           "height": 240,
@@ -990,12 +992,14 @@
                   "field": "Price Growth (%)",
                   "type": "quantitative",
                   "title": "Price growth since 2022 (%)",
+                  "labelPadding": 8,
                   "scale": {
                     "domain": [
                       -10,
                       30
                     ]
                   },
+                  
                   "axis": {
                     "tickCount": 5,
                     "grid": true
@@ -1203,7 +1207,7 @@
         },
         {
           "title": {
-            "text": "Affordability change, 2022 to 2024",
+            "text": "Change in price-to-income ratio, 2022 to 2024",
             "anchor": "start",
             "offset": 10
           },
@@ -1757,6 +1761,8 @@
     "axis": {
       "labelFontSize": 10,
       "titleFontSize": 11,
+        "labelPadding": 8,
+        "titlePadding": 15,
       "gridColor": "#E6E6E6",
       "domainColor": "#999999"
     },
